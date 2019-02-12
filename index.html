@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118514810-1"></script>
+    <script>window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-118514810-1');
+    </script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Painting with Data</title><!--indicate that our site is mobile optimized-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/pwd_logo.png">
+    <link rel="stylesheet" href="/stylesheets/w3.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="theme-color" content="#ffffff">
+    <script src="javascripts/js/jquery-1.9.1.js"></script>
+    <script src="javascripts/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="javascripts/js/tether.min.js"></script>
+    <link href="stylesheets/mapbox.css" rel="stylesheet">
+    <link rel="stylesheet" href="stylesheets/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <link rel="stylesheet" href="stylesheets/vprog.css">
+    <link rel="stylesheet" href="stylesheets/awesome-bootstrap-checkbox.css">
+    <link rel="stylesheet" href="stylesheets/build.css">
+    <link rel="stylesheet" href="stylesheets/login.css">
+    <script src="javascripts/js/mapbox.js"></script>
+    <script type="text/javascript" src="javascripts/js/d3.js"></script>
+    <script type="text/javascript" src="javascripts/js/d3.parcoords.js"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheets/d3.parcoords.css">
+    <script type="text/javascript" src="javascripts/js/three.js"></script>
+    <script type="text/javascript" src="javascripts/js/THREEx.KeyboardState.js"></script>
+    <script type="text/javascript" src="javascripts/js/THREEx.WindowResize.js"></script>
+    <!-- PaintingWithData CSS-->
+    <link rel="stylesheet" href="/stylesheets/base.css">
+    <!-- Bootstrap JS libs-->
+    <script type="text/javascript" src="/javascripts/js/bootstrap.min.js"></script>
+</head>
+<body>
+<nav role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container margin-small nav-container">
+        <div class="navbar-header">
+            <button id="toggle-navbar" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar" class="navbar-toggle collapsed nav-fix"><span class="icon-bar"></span><span
+                    class="icon-bar"></span><span class="icon-bar"></span></button>
+        </div>
+        <a href="#" class="navbar-brand"><img alt="Brand" src="images/icon.svg" style="height: 60px;"></a>
+        <ul class="nav navbar-nav navbar-left">
+            <li><a class="navbar-application-lc" href="/upload">Launch</a></li>
+            <li><a href="#explore_section">Explore</a></li>
+            <li><a href="#about_section">About</a></li>
+            <li><a href="#team_section">Team</a></li>
+            <li><a href="https://medium.com/painting-with-data" target="_blank">Blog</a></li>
+            <li><a href="/tutorials">Tutorials</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/users/signup">Sign Up</a></li>
+            <li><a href="/users/login">Login</a></li>
+        </ul>
+    </div>
+</nav>
+<script>$("#toggle-navbar").click(function () {
+    $(".navbar-inverse").toggleClass("navbar-expanded");
+});</script>
+<div class="brand-title">
+    <div class="row">
+        <div class="title-frame container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h1 class="site-title">
+                        <img src="images/homepage-title-bw-2.png" class="title_image">
+                    </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="title-txt">
+                        Painting with data is a user-friendly, collaborative, web-based platform for analyzing and
+                        visualizing spatial data.
+                        <br> <br>
+                        <b>Build your own spatial models. </b>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2 col-sm-offset-10">
+            <p style="font-family: 'Karla'; font-size: 10pt; opacity:0.6;" class="home-desc">
+                Voxel map showing cancer (magenta), cancer incidence (turquoise), and home value (red) data from NYC.
+            </p>
+        </div>
+        <img class="gradient-screen" src="images/bg.png">
+    </div>
+    <div class="row explore">
+        <img src="images/scroll_down_btn.svg" id="explore" class="explore-btn">
+        <!--a(class="btn btn-md btn-jumbotron btn-gray", href="/upload", role="button") Explore-->
+    </div>
+</div>
+<div id="app" class="transparent no-margin">
+    <div class="row spacing">
+        <div class="container">
+            <div class="col-md-12 application-title">
+                <h2 class="spacing-small col-md-9">
+                    Application
+                </h2>
+                <a href="/upload" role="button">
+                    <h2 class="col-md-offset-1 col-md-2 application-lc">LAUNCH</h2></a>
+            </div>
+            <p class="col-md-6 application-txt">
+                With Painting with Data, users can create an interactive map and explore relationships between
+                georeferenced datasets leading to sound, informed policy or business decisions.
+            </p>
+            <p class="col-md-6 application-txt">Painting with Data utilizes voxels, which are a two-dimensional
+                representation of a three-dimensional overlay, to compute different variables into a single map.
+            </p>
+            <p class="col-md-6 application-txt">Through an easy-to-use online interface, users can upload spatial
+                datasets, or use the datasets available in the platform, creating spatial models that allow them to
+                iteratively think about the correlations among datasets, and build spatial models on the fly.
+            </p>
+            <p class="col-md-6 application-txt">The spatial models can then be easily shared and built in collaboration
+                with numerous users or citizens.
+            </p>
+            <br>
+        </div>
+    </div>
+    <div class="spacing">
+    </div>
+    <div id="explore_section" class="container">
+        <div class="row">
+            <div class="col-sm-6 application-title">
+                <h2 class="spacing-small">Explore Recent Public Projects
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/119">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/119.jpg">
+                        <div class="showcase-panel-time">Mon Oct 08 2018 02:55:45 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/118">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/118.jpg">
+                        <div class="showcase-panel-time">Mon Oct 08 2018 02:35:17 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/116">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/116.jpg">
+                        <div class="showcase-panel-time">Mon Sep 24 2018 12:06:28 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/115">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/115.jpg">
+                        <div class="showcase-panel-time">Sat Sep 08 2018 17:38:18 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/114">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/114.jpg">
+                        <div class="showcase-panel-time">Sat Sep 08 2018 17:25:42 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/110">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/110.jpg">
+                        <div class="showcase-panel-time">Tue Aug 28 2018 02:51:22 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/108">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/108.jpg">
+                        <div class="showcase-panel-time">Sun Aug 26 2018 23:05:21 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/107">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/107.jpg">
+                        <div class="showcase-panel-time">Mon Aug 20 2018 02:03:20 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/106">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/106.jpg">
+                        <div class="showcase-panel-time">Sun Jul 22 2018 15:59:40 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/104">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/104.jpg">
+                        <div class="showcase-panel-time">Sun Jul 22 2018 14:28:34 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/102">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/102.jpg">
+                        <div class="showcase-panel-time">Sun Jul 22 2018 03:37:00 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-3 showcase-panel">
+                <div>
+                    <a href="/app/95">
+                        <img src="https://s3.amazonaws.com/data-voxel-images-server2/95.jpg">
+                        <div class="showcase-panel-time">Wed Jul 11 2018 03:30:09 GMT+0000 (UTC)
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="spacing">
+    </div>
+    <div id="about_section" class="container">
+        <div class="row">
+            <div class="col-md-6 application-title">
+                <h2 class="spacing-small">About Painting with Data
+                </h2>
+            </div>
+        </div>
+        <div class="row application-txt col-md-6">
+            <p class="text-left">Increasingly, geospatial data are becoming a standard aspect of decision-making in both
+                private and public sectors due to recent strides in spatial data capture. While the data may be
+                plentiful, the technical skills required to understand and analyze it may not always be present.
+                <strong>Painting with Data
+                </strong> facilitates the analysis and visualization of spatial data by dramatically reducing the steep
+                learning curve required for most geographic information system (GIS) software.
+            </p>
+            <p class="text-left">
+                <strong>Painting with Data
+                </strong> is an online tool for analyzing and visualizing spatial data. The tool combines functional and
+                representational modeling through a real-time and user-friendly interface, with the objective of
+                lowering the barriers of entry to urban modeling and interaction.
+            </p>
+            <p class="text-left">
+                <strong>Painting with Data
+                </strong> provides users with a more intuitive and visually-based method of understanding spatial data
+                in order to tell a compelling story, iteratively exploring spatial correlations, without the upfront
+                cost of spending long time learning software.
+            </p>
+        </div>
+        <div class="row application-txt col-md-6">
+            <p class="text-left">Contrary to traditional mapping software that operates as a database paired with a map
+                or a graphical representation,
+                <strong>Painting with Data
+                </strong> allows users to directly manipulate the map itself instead of through abstract numbers and
+                symbols. This creates a more intuitive way of understanding spatial data and creating spatial models,
+                and redefines the way in which users explore and gain intuitions from spatial data.
+            </p>
+            <p class="spacing-medium text-left">Additionally,
+                <strong>Painting with Data
+                </strong> introduces a visual coding interface through drag-and-drop building blocks which allows for
+                ‘real-time’ geospatial computing, extending its mapping and analytical capacities. Through
+                user-generated building-blocks, the visual coding language allows the extension of the software
+                according to the needs of the user, and generates a broader user-community. Through its open-source,
+                web-based availability the software allows multi-disciplinary collaborations, facilitating the display
+                and shareability of spatial data modeling. Through its features, our software allows non-experts to
+                access spatial models providing contextual knowledge.
+            </p>
+            <p class="spacing-medium text-left">With an account, users are able to upload spatial data and create
+                projects that are accessible anytime they log in. You simply need a valid email address and shapefiles
+                to upload. Painting with Data is currently compatible with numeric data and requires polygon shapefiles.
+                Future functionality will include point and line data.
+            </p>
+        </div>
+    </div>
+    <div class="spacing">
+    </div>
+    <div id="team_section" class="container">
+        <div class="col-md-12 application-title">
+            <h2 class="spacing-small col-md-9">Team and Collaborators
+            </h2>
+        </div>
+        <div class="row spacing-large">
+            <p class="spacing-medium text-left">Painting with Data was initiated by Carlos Sandoval Olascoaga as a
+                research project. The continued development of the application has been made possible through a talented
+                group of multidisciplinary researchers at MIT.
+            </p>
+            <div class="section_content row member_cont">
+                <div class="col-md-3 tm_wrapper">
+                    <div class="team_icon">
+                        <img src="images/members/carlos.jpg">
+                    </div>
+                    <div class="icon_over">
+                        <img src="images/plus.png" name="Carlos Sandoval Olascoaga"
+                             bio1="Carlos Sandoval Olascoaga is a PhD student in the Design and Computation Group, specializing in urban computing, and data visualization. Previously, he was a research scientist at UC Berkeley, investigating the convergence of design, spatial information, data science, and social sciences. Carlos has been a Lecturer at UC Berkeley and a Visiting Professor at UNAM. His work has been supported by numerous fellowships, more recently by the MIT Presidential Fellowship, the IDEA Studio Fellowship at Autodesk, the National Council of Science and Technology, and the Jumex Foundation for Contemporary Arts."
+                             bio2="Carlos’ latest research examines the history of computing, its development and application in urban planning tools, and their utilization as artifacts for empirical legitimization of the scientific planning practices during 1960’s. His current work involves the development of alternative urban computing methodologies that are non-deterministic, collective, and open-ended."
+                             bio3="Carlos holds a SMArchS in Computation with the highest distinction from MIT, a Master of Architecture from UC Berkeley, and a Bachelor of Architecture with distinction from UNAM in Mexico."
+                             img_url="images/members/carlos.jpg" home_url="" twitter_url=""
+                             github_url="https://github.com/cesandoval"
+                             linkedin_url="https://www.linkedin.com/in/carlos-sandoval-olascoaga"
+                             email="csandova@mit.edu" class="icon_plus mybtn pop_team">
+                        <div class="icon_links">
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="" target="_blank">
+                                    <img src="images/homepage.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/twitter.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/linkedin.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/github.png" class="icon_link_img mybtn">
+                            </div>
+                        </div>
+                    </div>
+                    <p class="member_name">Carlos Sandoval Olascoaga
+                    </p>
+                </div>
+                <div class="col-md-3 tm_wrapper">
+                    <div class="team_icon">
+                        <img src="images/members/kai.jpg">
+                    </div>
+                    <div style="opacity: 0;" class="icon_over">
+                        <img src="images/plus.png" name="Ting-Kai Chang"
+                             bio1="Ting-Kai is a computer scientist and a Masters student in Civil Engineering at NTU (Taiwan)."
+                             img_url="images/members/kai.jpg" home_url="" twitter_url=""
+                             github_url="https://github.com/ooookai" linkedin_url="" email="ooookai@gmail.com"
+                             class="icon_plus mybtn pop_team">
+                        <div class="icon_links">
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/homepage.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/twitter.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="=" target="_blank">
+                                    <img src="images/linkedin.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="https://github.com/ooookai" target="_blank">
+                                    <img src="images/github.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="member_name">Ting-Kai Chang
+                    </p>
+                </div>
+                <div class="col-md-3 tm_wrapper">
+                    <div class="team_icon">
+                        <img src="images/members/peng.jpg">
+                    </div>
+                    <div style="opacity: 0;" class="icon_over">
+                        <img src="images/plus.png" name="Wenzhe Peng"
+                             bio1="Wenzhe Peng is SM student at the MIT Computation Group. His interest lies in the intersection of architectural design, artificial intelligence and data visualization. Wenzhe has participated in developing diverse applications and algorithms applied to architectural and urban design at UC Berkeley and MIT."
+                             img_url="images/members/peng.jpg" home_url="" twitter_url=""
+                             github_url="https://github.com/panthersuper" linkedin_url="" email="pwz@mit.edu"
+                             class="icon_plus mybtn pop_team">
+                        <div class="icon_links">
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/homepage.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/twitter.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="=" target="_blank">
+                                    <img src="images/linkedin.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="https://github.com/panthersuper" target="_blank">
+                                    <img src="images/github.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="member_name">Wenzhe Peng
+                    </p>
+                </div>
+                <div class="col-md-3 tm_wrapper">
+                    <div class="team_icon">
+                        <img src="images/members/brena.jpg">
+                    </div>
+                    <div style="opacity: 0;" class="icon_over">
+                        <img src="images/plus.png" name="Brena Sena"
+                             bio1="Brena Sena obtained her Masters in Public Health from Columbia University’s Mailman School of Public Health in NYC. She has also worked for start-ups such as Foursquare, Medko Health, and Teamscope. Brena hopes to continue learning where she can be most useful in bridging gaps in global public health, public policy, and research."
+                             img_url="images/members/brena.jpg" home_url="" twitter_url=""
+                             github_url="https://github.com/brenasena" linkedin_url="" email="brena.sena@gmail.com"
+                             class="icon_plus mybtn pop_team">
+                        <div class="icon_links">
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/homepage.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/twitter.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="=" target="_blank">
+                                    <img src="images/linkedin.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="" target="_blank">
+                                    <img src="images/github.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="member_name">Brena Sena
+                    </p>
+                </div>
+                <div class="col-md-3 tm_wrapper">
+                    <div class="team_icon">
+                        <img src="images/members/meg.jpg">
+                    </div>
+                    <div style="opacity: 0;" class="icon_over">
+                        <img src="images/plus.png" name="Meg Van Wyk"
+                             bio1="Meg Van Wyk (MBA, LICSW) has worked as a clinical social worker for the past 9 years, and  enjoys enhancing and streamlining systems within her work environment. More recently, she returned to school and completed her MBA in healthcare administration. Meg is interested in finding ways to disseminate information in a way that will ultimately lead to positive social change."
+                             img_url="images/members/meg.jpg" home_url="" twitter_url="" github_url=""
+                             linkedin_url="https://www.linkedin.com/in/margaret-vanwyk-6523a664/"
+                             email="mevanwyk@gmail.com" class="icon_plus mybtn pop_team">
+                        <div class="icon_links">
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/homepage.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/twitter.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="https://www.linkedin.com/in/margaret-vanwyk-6523a664/" target="_blank">
+                                    <img src="images/linkedin.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="" target="_blank">
+                                    <img src="images/github.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="member_name">Meg Van Wyk
+                    </p>
+                </div>
+                <div class="col-md-3 tm_wrapper">
+                    <div class="team_icon">
+                        <img src="images/members/yoeal.jpeg">
+                    </div>
+                    <div style="opacity: 0;" class="icon_over">
+                        <img src="images/plus.png" name="Yoeal Efrem"
+                             bio1="Yoeal is a senior in Computer Science at MIT" img_url="images/members/yoeal.jpeg"
+                             home_url="" twitter_url="" github_url="https://github.com/yefrem96" linkedin_url=""
+                             email="yaatehr@mit.edu" class="icon_plus mybtn pop_team">
+                        <div class="icon_links">
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/homepage.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/twitter.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="=" target="_blank">
+                                    <img src="images/linkedin.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="https://github.com/yefrem96" target="_blank">
+                                    <img src="images/github.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="member_name">Yoeal Efrem
+                    </p>
+                </div>
+                <div class="col-md-3 tm_wrapper">
+                    <div class="team_icon">
+                        <img src="images/members/yaateh.jpg">
+                    </div>
+                    <div style="opacity: 0;" class="icon_over">
+                        <img src="images/plus.png" name="Yaateh Richardson"
+                             bio1="Yaateh Richardson is a member of the MIT Class of 2020 enrolled in course 6-3. He joined the team as a developer in Fall 2017. His other pursuits involve Music (mainly Jazz Saxophone), working his independent project - a mobile event planning app, and running the MIT Undergraduate Administration's Technology Committee as Vice-Chairman."
+                             img_url="images/members/yaateh.jpg" home_url="" twitter_url=""
+                             github_url="https://github.com/yaatehr"
+                             linkedin_url="https://www.linkedin.com/in/yaateh-richardson-05bb51127"
+                             email="yaatehr@mit.edu" class="icon_plus mybtn pop_team">
+                        <div class="icon_links">
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/homepage.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/twitter.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="=" target="_blank">
+                                    <img src="images/linkedin.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="https://github.com/yaatehr" target="_blank">
+                                    <img src="images/github.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="member_name">Yaateh Richardson
+                    </p>
+                </div>
+                <div class="col-md-3 tm_wrapper">
+                    <div class="team_icon">
+                        <img src="images/members/leon.jpg">
+                    </div>
+                    <div style="opacity: 0;" class="icon_over">
+                        <img src="images/plus.png" name="Leon Cheng"
+                             bio1="Leon Cheng is a sophomore at MIT studying Computer Science and Engineering. He joined the team as a developer in Spring 2018. Originally from NYC, his other interests include basketball, dancing, entrepreneurship, and the first generation program."
+                             img_url="images/members/leon.jpg" home_url="" twitter_url=""
+                             github_url="https://github.com/leoncheng57" linkedin_url="" email="leonc@mit.edu"
+                             class="icon_plus mybtn pop_team">
+                        <div class="icon_links">
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/homepage.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/twitter.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="=" target="_blank">
+                                    <img src="images/linkedin.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="" target="_blank">
+                                    <img src="images/github.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="member_name">Leon Cheng
+                    </p>
+                </div>
+                <div class="col-md-3 tm_wrapper">
+                    <div class="team_icon">
+                        <img src="images/members/chris.jpg">
+                    </div>
+                    <div style="opacity: 0;" class="icon_over">
+                        <img src="images/plus.png" name="Christopher Xu"
+                             bio1="Christopher Xu is a freshman (Class of 2021) majoring in mathematics with computer science. His interests revolve around mathematics, computer science, and fast music. After college, he hopes to work in the industry for a few years before going to grad school."
+                             img_url="images/members/chris.jpg" home_url="" twitter_url=""
+                             github_url="https://github.com/chrisxu3" linkedin_url="" email="chxu@mit.edu"
+                             class="icon_plus mybtn pop_team">
+                        <div class="icon_links">
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/homepage.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <img src="images/twitter.png" class="icon_link_img mybtn">
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="=" target="_blank">
+                                    <img src="images/linkedin.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                            <div style="padding:0px;" class="icon_25">
+                                <a href="" target="_blank">
+                                    <img src="images/github.png" class="icon_link_img mybtn">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="member_name">Christopher Xu
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="row home_icon_row">
+        <div class="home_icon_wrapper">
+            <a href="https://twitter.com/PaintingWData" target="_blank">
+                <img src="images/twitter.png" class="icon_link_img mybtn home_icon">
+            </a>
+        </div>
+        <div class="home_icon_wrapper">
+            <a href="https://www.facebook.com/PaintingWData/" target="_blank">
+                <img src="images/facebook.png" class="icon_link_img mybtn home_icon">
+            </a>
+        </div>
+        <div class="home_icon_wrapper">
+            <a href="https://www.linkedin.com/company/27180309/" target="_blank">
+                <img src="images/linkedin.png" class="icon_link_img mybtn home_icon">
+            </a>
+        </div>
+    </div>
+    <div class="contact-div">Have a quick question? Email our Support Team at support@paintingwithdata.com
+    </div>
+    <div class="terms-bar"><span id="show-policy" class="terms">
+            <b>Privacy Policy &nbsp;&nbsp;|&nbsp;&nbsp;</b>
+    </span>
+        <span id="show-terms" class="terms">
+            <b>Terms and Conditions</b>
+        </span>
+    </div>
+    <p>Painting with Data 2018. Patent Pending.</p>
+</div>
+</body>
+</html>
+
+
+<script>$('.dropdown').on('show.bs.dropdown', function () {
+    $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+});
+
+$('.dropdown').on('hide.bs.dropdown', function () {
+    $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+});
+
+jQuery('ul.nav li.dropdown').hover(function () {
+    jQuery(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+}, function () {
+    jQuery(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+});
+
+$(document).ready(function () {
+    var height = $(".navbar").height();
+    //- $(".dropdown-menu").top(height);
+});
+</script>
+
+<script>d3.selectAll(".tm_wrapper .icon_over").on("mouseover", function () {
+    d3.select(this).style("opacity", 0.6);
+}).on("mouseout", function () {
+    d3.select(this).style("opacity", 0);
+});
+
+$("#explore").click(() = > {
+    $('html, body'
+).animate({
+    scrollTop: $("#explore_section").offset().top - 80
+}, 2000);
+})
+;
+$("#about").click(() = > {
+    $('html, body'
+).animate({
+    scrollTop: $("#about_section").offset().top - 80
+}, 2000);
+})
+;
+$("#team").click(() = > {
+    $('html, body'
+).animate({
+    scrollTop: $("#team_section").offset().top - 80
+}, 2000);
+})
+;
+
+
+$(".pop_team").click(function () {
+
+    d3.select("body").append("div")
+        .attr("class", "pop_team_box_back").style("top", $(document).scrollTop() + "px")
+    ;
+
+    var thisholder = d3.select("body").append("div")
+        .attr("class", "pop_team_box").style("top", $(document).scrollTop() + window.innerHeight * 0.2 + "px");
+
+    thisholder
+        .append("img").attr("src", "images/thex.png").attr("class", "close_expanded");
+
+    var left_panel = thisholder.append("div").attr("class", "col-md-5 box_column");
+    var right_panel = thisholder.append("div").attr("class", "col-md-7 box_column left_mark");
+
+    left_panel.append("img").attr("class", "member_box_img").attr("src", $(this).attr("img_url"));
+    left_panel.append("p").attr("class", "member_box_title").text($(this).attr("name"));
+    left_panel.append("p").attr("class", "member_box_email").text($(this).attr("email"));
+
+    var r1_1_0 = left_panel.append("div").attr("class", "icon_links_box");
+
+    if ($(this).attr("home_url")) {
+        r1_1_0.append("div")
+            .attr("class", "icon_25")
+            .attr("style", "padding:0px;")
+            .html('<a href="' + $(this).attr("home_url") + '" target="_blank"><img src="images/homepage.png" class="icon_link_img mybtn"></a>');
+    }
+
+    else {
+        r1_1_0.append("div")
+            .attr("class", "icon_25")
+            .attr("style", "padding:0px;")
+            .html('<img src="images/homepage.png" class="icon_link_img mybtn">');
+    }
+
+    if ($(this).attr("twitter_url")) {
+        r1_1_0.append("div")
+            .attr("class", "icon_25")
+            .attr("style", "padding:0px;")
+            .html('<a href="' + $(this).attr("twitter_url") + '" target="_blank"><img src="images/twitter.png" class="icon_link_img mybtn"></a>');
+    }
+    else {
+        r1_1_0.append("div")
+            .attr("class", "icon_25")
+            .attr("style", "padding:0px;")
+            .html('<img src="images/twitter.png" class="icon_link_img mybtn">');
+    }
+
+    if ($(this).attr("linkedin_url")) {
+        r1_1_0.append("div")
+            .attr("class", "icon_25")
+            .attr("style", "padding:0px;")
+            .html('<a href="' + $(this).attr("linkedin_url") + '" target="_blank"><img src="images/linkedin.png" class="icon_link_img mybtn"></a>');
+    } else {
+        r1_1_0.append("div")
+            .attr("class", "icon_25")
+            .attr("style", "padding:0px;")
+            .html('<img src="images/linkedin.png" class="icon_link_img mybtn">');
+    }
+
+    if ($(this).attr("github_url")) {
+        r1_1_0.append("div")
+            .attr("class", "icon_25")
+            .attr("style", "padding:0px;")
+            .html('<a href="' + $(this).attr("github_url") + '" target="_blank"><img src="images/github.png" class="icon_link_img mybtn"></a>');
+    } else {
+        r1_1_0.append("div")
+            .attr("class", "icon_25")
+            .attr("style", "padding:0px;")
+            .html('<img src="images/github.png" class="icon_link_img mybtn">');
+    }
+
+    right_panel.append("p").attr("class", "member_box_bio").text($(this).attr("bio1"));
+    if ($(this).attr("bio2")) {
+        right_panel.append("p").attr("class", "member_box_bio").text($(this).attr("bio2"));
+    }
+    if ($(this).attr("bio3")) {
+        right_panel.append("p").attr("class", "member_box_bio").text($(this).attr("bio3"));
+    }
+
+    $(".pop_team_box .close_expanded").click(function () {
+        d3.selectAll(".pop_team_box").remove();
+        d3.selectAll(".pop_team_box_back").remove();
+    });
+
+    $(".pop_team_box_back").click(function () {
+        d3.selectAll(".pop_team_box").remove();
+        d3.selectAll(".pop_team_box_back").remove();
+    });
+
+});
+
+$(window).scroll(function () {
+    d3.selectAll(".pop_team_box").remove();
+    d3.selectAll(".pop_team_box_back").remove();
+});
+
+</script>
+<script src="/javascripts/progressWidget.js" type="text/javascript"></script>
+<script>d3.selectAll("#show-terms").on("click", function () {
+    d3.select(".surveyBack").remove();
+    d3.select(".surveyBox").remove();
+
+    let surveyBack = d3.select("body").append("div").classed("surveyBack", true).on("click", function () {
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+    });
+    let surveyBox = d3.select("body").append("div").classed("surveyBox", true);
+    surveyBox.append("p").classed("delete_surveybox", true).text("X").on("click", function () {
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+    });
+    let embeddingBox = surveyBox.append("div").classed("embedding-box", true);
+    embeddingBox.append("iframe").attr("src", "/posts/terms/CopyofPaintingwithDataTermsofServiceDraft.html").classed("embedded", true)
+})
+
+d3.selectAll("#show-policy").on("click", function () {
+    console.log("yyy");
+    d3.select(".surveyBack").remove();
+    d3.select(".surveyBox").remove();
+
+    let surveyBack = d3.select("body").append("div").classed("surveyBack", true).on("click", function () {
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+    });
+    let surveyBox = d3.select("body").append("div").classed("surveyBox", true);
+    surveyBox.append("p").classed("delete_surveybox", true).text("X").on("click", function () {
+        d3.select(".surveyBack").remove();
+        d3.select(".surveyBox").remove();
+    });
+    let embeddingBox = surveyBox.append("div").classed("embedding-box", true);
+    embeddingBox.append("iframe").attr("src", "/posts/terms/CopyofPaintingwithDataPrivacyPolicyDraft.html").classed("embedded", true)
+})</script>
